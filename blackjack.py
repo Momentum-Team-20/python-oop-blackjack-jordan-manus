@@ -2,7 +2,7 @@
 import random
 
 SUITS = ['♤', '♧', '❤️', '♢']
-RANKS = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10,'J', 'Q', 'K']
+RANKS = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
 VALUE = []
 
 
@@ -23,7 +23,7 @@ class Deck:
             for rank in RANKS:
                 card = Card(suit, rank)
                 if card.rank == 'A':
-                    card.value = (1, 11)
+                    card.value = 11
                 elif card.rank in range(2, 11):
                     card.value = rank
                 else:
@@ -44,6 +44,28 @@ class Player:
 
     def __str__(self) -> str:
         return self.name
+    
+    def look_at_hand(self):
+        '''shows cards in hand to player'''
+        for x in self.hand:
+            print(x)
+
+    def calc_hand_value(self):
+        '''return the total value of the hand'''
+        sum = 0
+        for card in self.hand:
+            sum += card.value
+        sum = self.if_ace(card, sum)
+        print(f'the sum is: {sum}')
+
+    def if_ace(self, card, sum):
+        '''changes value of Ace from 11 to 1 if over 21'''
+        print('inside the if_ace')
+        for card in self.hand:
+            if sum > 21 and card.rank == 'A': 
+                sum -= 10
+        print(f'this is the new sum: {sum}')
+        return sum
 
 
 class Dealer(Player):
@@ -70,10 +92,11 @@ class Game:
             self.dealer.hand.append(card)
             print(f'{self.player} has {self.player.hand} and {self.dealer} has {self.dealer.hand}')
 
-    def hit(self, player):
+    def hit(self):
         '''Deal 1 card to the selected player'''
-        pass
-        
+        for card in self.deck.cards:
+            if card.rank == 'A':
+                self.player.hand.append(card)
 
 # ace_of_spades = Card('spade', 'A', (1, 11))
 # print(ace_of_spades)
